@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Download Vídeo</title>
+</head>
+<body>
+    <button id="downloadBtn">Download Video</button>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        const API_KEY = 'API_KEY';
+        const API_URL = 'https://api-v2.pandavideo.com.br';
+        const API_DOWNLOAD = 'https://download-us01.pandavideo.com:7443';
+        const DIR_FILE = '/tmp/videos';
+        const videoId = 'VIDEO_ID';
+        async function downloadFile(videoId) {
+            try {
+                console.log(`Download video_id: ${videoId}`);
+                
+                const xhr = new XMLHttpRequest();
+                xhr.open("POST", `${API_DOWNLOAD}/videos/${videoId}/download`, true);
+                xhr.setRequestHeader("Authorization", API_KEY);
+                xhr.responseType = "blob";
+
+                xhr.onload = function() {
+                  if (xhr.status === 200) {
+                    const url = window.URL.createObjectURL(xhr.response);
+
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${videoId}.mp4`;
+                    document.body.appendChild(a);
+                    a.click();
+
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                  }
+                };
+
+                xhr.send();
+
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        async function downloadVideo() {
+            await downloadFile(videoId);
+            console.log('Download completed!');
+        }
+        const downloadButton = document.getElementById('downloadBtn');
+        downloadButton.addEventListener('click', downloadVideo);
+    </script>
+</body>
+</html>
