@@ -1,4 +1,3 @@
-Certainly! Here's a suggested description for the README file:
 
 ---
 
